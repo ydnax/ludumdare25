@@ -1,17 +1,21 @@
 re.c('spike')
-.requires('tiles.png tsprite dead')
+.requires('tiles.png tsprite dead interactive')
 .defines({
   
   speed:40 * re.sys.stepSize,
   // gravX:0,
   friX:0.75,
   friY:0.95,
+  padY:5,
   disp_called:false,
   _hit:function(x,y){
     if(y){
     // this.alpha=0.1
         var that=this;
         if(!this.disp_called){
+            console.log(arguments);
+            this.removeComp("body");
+            this.alpha=0.3;
             this.disp_called=true;
             setTimeout(function(){that.dispose()}, 500);
         }
@@ -20,12 +24,14 @@ re.c('spike')
   // padX:6,
   fall: function(){
     this.comp("force body")
+    this.usable=false;
   },
   select:function(){
     this.alpha=1;
   },
   deselect:function(){
-    this.alpha=0.3;
+    if(this.usable)
+        this.alpha=0.3;
   },
 
   

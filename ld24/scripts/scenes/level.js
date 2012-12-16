@@ -14,9 +14,16 @@ re.scene('level')
   })
   .on('keydown:space', function(key, event){
       that.map.interactives_last.fall();
+      that.map.interactives_i++;
+      that.map.setSelected();
   })
-  .on('keydown:n', function(){
-      that.map.selectNext();
+  .on('keydown:right', function(){
+      that.map.interactives_i=that.map.interactives_i+1;
+      that.map.setSelected();
+  })
+  .on('keydown:left', function(){
+      that.map.interactives_i--;
+      that.map.setSelected();
   });
 })
 .exit(function(){
