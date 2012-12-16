@@ -38,15 +38,17 @@ re.c('level')
       re.hitmap.dispose();
     }
     re.hitmap = re.e('hitmap');
-    this.ProcessLayers();
+    this.ProcessObjectLayers();
+    this.ProcessTileLayers();
   },
-  ProcessLayers:function(){
-    var pos = this.objectgroup.object;
-    var hero = re.e("hero")
-      .attr({
-        posX:pos.x,
-        posY:pos.y - re.tile.sizeY //tiled editor adds an extra tile to y
-      });
+  ProcessTileLayers:function(){
+    // var pos = this.objectgroup.object[0];
+    // var hero = re.e("hero")
+    //   .attr({
+    //     posX:pos.x,
+    //     posY:pos.y - re.tile.sizeY //tiled editor adds an extra tile to y
+    //   });
+    var hero = re("hero")[0];
     this.trash.push(hero);
     var layers = Array.isArray(this.layer)?this.layer:[this.layer];
     for(i in layers){
@@ -93,12 +95,52 @@ re.c('level')
     (this.interactives_last=this.interactives[0]).select();
     this.interactives_i=0;
     this.trash.push(re.hitmap);
-    re("hero")[0].drawLast();
+    hero.drawLast();
+  },
+  ProcessObjectLayers:function(){
+    var objects=this.objectgroup.object;
+    var startid = Math.min.apply(undefined, objects.map(function(o){return o.gid}));
+    // var startid = 257;
+    var hero;
+    for(i in objects){
+      var obj = objects[i];
+      switch(obj.gid-startid){
+        case 0:
+        console.log("heroc");
+          var hero = re.e("hero")
+          .attr({
+            posX:obj.x,
+            posY:obj.y - re.tile.sizeY //tiled editor adds an extra tile to y
+          });
+        break;
+      }
+    }
+    this.trash.push(hero);
+    for(i in objects){
+      var obj = objects[i];
+      switch(obj.gid-startid){
+        case 1:
+        console.log("finish");
+        break;
+        case 2:
+        console.log("left %s %s", obj.x, obj.y)
+        this.trash.push(re.e('item').attr({
+          hero:hero,
+          touch:function(){this.hero.walkdir=-1;console.log("h");this.dispose()},
+          posX:obj.x,
+          posY:obj.y,
+          bodyX:re.tile.sizeX,
+          bodyY:re.tile.sizeY,
+          frame:1
+        }).drawLast());
+      }
+    }
   },
   teardown:function(){
     this.trash.forEach(function(obj){
       obj.dispose();
-    })
+    });
+    this.trash=[];
   },
   getOpts: function(props){
     if(!props){

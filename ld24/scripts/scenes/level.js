@@ -8,6 +8,10 @@ re.scene('level')
   .text("mapnr: "+ map)
   .alignHor()
   .alignVer();
+  re.e('mouse')
+.on('mousedown', function(x, y){
+  console.log(arguments)
+})
   re.e('keyboard')
   .on('keydown:r', function(key, event){
       re.scene('level').enter(map);

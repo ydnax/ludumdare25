@@ -14,7 +14,7 @@ re.c('spike')
         var that=this;
         if(!this.disp_called){
             // console.log(arguments);
-            this.removeComp("body");
+            this.removeComp("body item");
             this.alpha=0.3;
             this.disp_called=true;
             setTimeout(function(){that.dispose()}, 500);
