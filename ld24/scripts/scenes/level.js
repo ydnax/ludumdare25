@@ -14,7 +14,7 @@ re.scene('level')
   })
   .on('keydown:space', function(key, event){
       that.map.interactives_last.fall();
-      that.map.interactives_i++;
+      // that.map.interactives_i++;
       that.map.setSelected();
   })
   .on('keydown:right', function(){

@@ -1,5 +1,5 @@
 re.c('spike')
-.requires('tiles.png tsprite dead interactive')
+.requires('tiles.png tsprite dead interactive item')
 .defines({
   
   speed:40 * re.sys.stepSize,
@@ -13,7 +13,7 @@ re.c('spike')
     // this.alpha=0.1
         var that=this;
         if(!this.disp_called){
-            console.log(arguments);
+            // console.log(arguments);
             this.removeComp("body");
             this.alpha=0.3;
             this.disp_called=true;
@@ -32,6 +32,11 @@ re.c('spike')
   deselect:function(){
     if(this.usable)
         this.alpha=0.3;
+  },
+  touch:function(){
+    // console.log(arguments)
+    this.hero.gotHit();
+    // console.log("bäm");
   },
 
   

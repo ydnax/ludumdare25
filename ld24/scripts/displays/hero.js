@@ -10,23 +10,30 @@ re.c('hero')
   jumpSpeed:480 * re.sys.stepSize,
   jump:false,
   ground:true,
+  walkdir: 0, // -1,0,1 l s r
   
   update:function(){
     
     //jump
-    if(this.ground && !this.jump && re.pressed('w')){
-      this.forceJump();
-    }
+    // if(this.ground && !this.jump && re.pressed('w')){
+    //   this.forceJump();
+    // }
     
     //walk back and fourth
-    if(re.pressed('a')){
+    if(this.walkdir==-1){
+    // if((this.walkdir==-1)||re.pressed('a')){
       this.velX -= this.speed;
       this.scaleX = -1;
       
       if(!this.jump) this.animate('run');
     }
+
+  if(re.pressed('p')){
+      //put debugcode here ;)
+    }
     
-    if(re.pressed('d')){
+    if(this.walkdir==1){
+    // if((this.walkdir==1)||re.pressed('d')){
       this.velX += this.speed;
       this.scaleX = 1;
       
@@ -47,11 +54,29 @@ re.c('hero')
   
   jumpReset:function(x, y, tx, ty){
     //check if a hit happened on the y axis
+    if(x){
+      this.walkdir*=-1;
+      // console.log(arguments)
+      // console.log("x!");
+    }
     if(y){
+      //console.log("y!")
       this.jump = false;
       this.ground = (ty >= this.posY);
     }
-  }
+  },
+  gotHit:function(){
+    for(var i=0;i<15;i++){
+      re.e('particle').attr({
+        posX:this.posX,
+        posY:this.posY,
+        color: '#ff1010',
+        sizeX: 4,
+        sizeY: 4,
+      });
+    }
+    this.walkdir=0;
+  },
   
 })
 .init(function(){
@@ -77,4 +102,6 @@ re.c('hero')
     aftermath:this.jumpReset
   });
   
+
+  this.walkdir=1;
 });

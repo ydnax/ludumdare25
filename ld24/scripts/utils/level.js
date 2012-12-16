@@ -8,17 +8,24 @@ re.c('level')
     console.log(this.interactives_i)
     if(!this.interactives_last.dead)
       this.interactives_last.deselect()
-    this.interactives=this.interactives.filter(function(obj){return (!obj.dead)&&(obj.usable) });
+    this.interactives=this.interactives
+      .filter(function(obj){return (!obj.dead)&&(obj.usable) })
+      .sort(function(a,b){
+        if(a.posX==b.posX){
+          return b.posY-a.posY;//if traps are above each other, use the one below
+        }
+        return a.posX-b.posX;
+      });
     if(this.interactives.length==0){
-      console.log("no more interactives")
+      // console.log("no more interactives")
       return
     }
     if(this.interactives_i<0){
-          console.log("interactives_i<0")
+          // console.log("interactives_i<0")
           this.interactives_i=0;
     }
     if(this.interactives_i>=this.interactives.length){
-      console.log("interactives_i>=size")
+      // console.log("interactives_i>=size")
       this.interactives_i = this.interactives.length-1
     }
       
@@ -35,11 +42,12 @@ re.c('level')
   },
   ProcessLayers:function(){
     var pos = this.objectgroup.object;
-    this.trash.push(re.e("hero")
+    var hero = re.e("hero")
       .attr({
         posX:pos.x,
         posY:pos.y - re.tile.sizeY //tiled editor adds an extra tile to y
-      }));
+      });
+    this.trash.push(hero);
     var layers = Array.isArray(this.layer)?this.layer:[this.layer];
     for(i in layers){
       var layer=layers[i];
@@ -60,7 +68,8 @@ re.c('level')
                         .attr({
                           frame: v, 
                           posX:re.tile.sizeX*x,
-                          posY:re.tile.sizeY*y //tiled editor adds an extra tile to y
+                          posY:re.tile.sizeY*y, //tiled editor adds an extra tile to y
+                          hero:hero,
                         });
                         // console.log(obj.bodyX)
                         // obj.fall();
